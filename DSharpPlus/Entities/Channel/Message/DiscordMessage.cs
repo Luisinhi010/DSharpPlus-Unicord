@@ -68,6 +68,7 @@ namespace DSharpPlus.Entities
             this.IsTTS = other.IsTTS;
             this.MessageType = other.MessageType;
             this.Pinned = other.Pinned;
+            this.Poll = other.Poll;
             this._timestampRaw = other._timestampRaw;
             this.WebhookId = other.WebhookId;
             this.ApplicationId = other.ApplicationId;
@@ -304,10 +305,16 @@ namespace DSharpPlus.Entities
         internal ulong? _guildId { get; set; }
 
         /// <summary>
-        /// Gets the message object for the referenced message
+        /// Gets the message object for the referenced message.
         /// </summary>
         [JsonProperty("referenced_message", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordMessage ReferencedMessage { get; internal set; }
+
+        /// <summary>
+        /// Gets the poll attached to this message, if Discord included one.
+        /// </summary>
+        [JsonProperty("poll", NullValueHandling = NullValueHandling.Ignore)]
+        public DiscordPoll Poll { get; internal set; }
 
         /// <summary>
         /// Gets whether the message is a response to an interaction.
@@ -421,6 +428,7 @@ namespace DSharpPlus.Entities
                             Locale = member.Locale,
                             Flags = member.Flags,
                             OAuthFlags = member.OAuthFlags,
+                            PrimaryGuild = member.PrimaryGuild,
                             Discord = this.Discord
                         });
                     }
