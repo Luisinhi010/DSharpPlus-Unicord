@@ -104,6 +104,16 @@ namespace DSharpPlus.Entities
             => this.User.GlobalName;
 
         /// <summary>
+        /// Gets the user's selected primary guild/server tag information from the cached user.
+        /// </summary>
+        [JsonIgnore]
+        public override DiscordUserPrimaryGuild PrimaryGuild
+        {
+            get => this.User.PrimaryGuild;
+            internal set => this.User.PrimaryGuild = value;
+        }
+
+        /// <summary>
         /// How long this member's communication will be suppressed for.
         /// </summary>
         [JsonProperty("communication_disabled_until", NullValueHandling = NullValueHandling.Include)]
