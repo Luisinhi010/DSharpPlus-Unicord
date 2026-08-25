@@ -21,6 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using DSharpPlus.Entities;
 using Newtonsoft.Json;
 
 namespace DSharpPlus.Net.Abstractions
@@ -72,6 +73,11 @@ namespace DSharpPlus.Net.Abstractions
         [JsonProperty("global_name", NullValueHandling = NullValueHandling.Include)]
         public string GlobalName { get; internal set; }
 
+        // Backported from current DSharpPlus. Discord uses this object for the
+        // user's visible server/guild tag (for example "RAT").
+        [JsonProperty("primary_guild", NullValueHandling = NullValueHandling.Ignore)]
+        public DiscordUserPrimaryGuild PrimaryGuild { get; internal set; }
+
         internal TransportUser() { }
 
         internal TransportUser(TransportUser other)
@@ -91,6 +97,7 @@ namespace DSharpPlus.Net.Abstractions
             this.Flags = other.Flags;
             this.OAuthFlags = other.OAuthFlags;
             this.GlobalName = other.GlobalName;
+            this.PrimaryGuild = other.PrimaryGuild;
         }
     }
 }
