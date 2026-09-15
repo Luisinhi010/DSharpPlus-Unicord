@@ -60,21 +60,19 @@ Current DSharpPlus understands:
 - `MESSAGE_POLL_VOTE_ADD`
 - `MESSAGE_POLL_VOTE_REMOVE`
 
-The legacy Unicord dispatcher predates those event names and routes them through `UnknownEvent`. To avoid replacing the large legacy dispatch file in this first backport, `DiscordClient.Polls.cs` installs a narrow compatibility bridge when something subscribes to `MessagePollVoted`.
-
-Only those two exact event names are converted.
+The legacy dispatcher now recognizes those two event names directly and forwards them to the typed poll handler in `DiscordClient.Polls.cs`.
 
 ```text
 Gateway
-  -> UnknownEvent (legacy dispatcher)
-  -> poll bridge
+  -> DiscordClient.Dispatch
   -> DiscordPollVoteUpdate
+  -> cached poll delta (when known)
   -> MessagePollVoted
 ```
 
-The bridge never performs a REST request. If the associated poll message and its result set are already cached, the affected answer count is updated in place. If results are unknown, the bridge leaves them unknown instead of manufacturing state.
+No REST request is performed. If the associated poll message and its result set are already cached, the affected answer count is updated in place. If results are unknown, they remain unknown instead of manufacturing state.
 
-This bridge is intentionally temporary. A future cleanup can add the two event names directly to `DiscordClient.Dispatch.cs` and remove the compatibility layer.
+`MESSAGE_UPDATE` also merges a supplied `poll` object into the cached message. Because Discord message-update payloads are partial, an omitted `poll` field preserves the existing cached poll instead of clearing it.
 
 ## 4. Message types
 
@@ -113,4 +111,4 @@ The next application-layer work belongs in Unicord itself:
 1. a reusable Fluent guild-tag control;
 2. a poll view model and Fluent poll card;
 3. handling `ThreadStarterMessage` as a referenced normal message instead of an unknown system message;
-4. eventually moving the poll vote cases into the main gateway dispatcher when that file is cleaned up.
+4. rendering poll-result system messages cleanly in the Unicord message renderer.
