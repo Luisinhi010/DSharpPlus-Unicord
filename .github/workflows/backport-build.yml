@@ -1,0 +1,29 @@
+name: Validate Unicord Backports
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - unicord-modern-backports
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore DSharpPlus
+        run: dotnet restore DSharpPlus/DSharpPlus.csproj
+
+      - name: Build DSharpPlus
+        run: dotnet build DSharpPlus/DSharpPlus.csproj --configuration Release --no-restore

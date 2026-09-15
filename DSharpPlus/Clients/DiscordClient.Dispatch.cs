@@ -356,6 +356,14 @@ namespace DSharpPlus
                         await this.OnMessageBulkDeleteEventAsync(dat["ids"].ToDiscordObject<ulong[]>(), (ulong)dat["channel_id"], (ulong?)dat["guild_id"]).ConfigureAwait(false);
                         break;
 
+                    case "message_poll_vote_add":
+                        await this.OnMessagePollVoteUpdateAsync(dat, true).ConfigureAwait(false);
+                        break;
+
+                    case "message_poll_vote_remove":
+                        await this.OnMessagePollVoteUpdateAsync(dat, false).ConfigureAwait(false);
+                        break;
+
                     #endregion
 
                     #region Message Reaction
@@ -1743,6 +1751,12 @@ namespace DSharpPlus
                 message._attachments.AddRange(event_message._attachments);
                 message.Pinned = event_message.Pinned;
                 message.IsTTS = event_message.IsTTS;
+
+                // MESSAGE_UPDATE payloads are partial. Preserve the cached poll when
+                // the field is omitted, but replace it when Discord supplies a newer
+                // poll object (for example when results/finalization change).
+                if (event_message.Poll != null)
+                    message.Poll = event_message.Poll;
 
                 // Mentions
                 message._mentionedUsers.Clear();

@@ -54,6 +54,7 @@ namespace DSharpPlus.Entities
             this.Flags = transport.Flags;
             this.OAuthFlags = transport.OAuthFlags;
             this.GlobalName = transport.GlobalName;
+            this.PrimaryGuild = transport.PrimaryGuild;
         }
 
         /// <summary>
@@ -179,6 +180,12 @@ namespace DSharpPlus.Entities
         /// </summary>
         [JsonProperty("global_name", NullValueHandling = NullValueHandling.Ignore)]
         public virtual string GlobalName { get; internal set; }
+
+        /// <summary>
+        /// Gets the user's selected primary guild/server tag information, when Discord includes it.
+        /// </summary>
+        [JsonProperty("primary_guild", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual DiscordUserPrimaryGuild PrimaryGuild { get; internal set; }
 
         /// <summary>
         /// Gets the user's mention string.
